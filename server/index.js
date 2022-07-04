@@ -9,6 +9,8 @@ const app = express();
 const cookieParser = require('cookie-parser');
 // import library passport
 const passport = require('./src/lib/passport');
+// import Cors
+const cors = require('cors');
 
 const PORT = process.env.PORT || 8000;
 
@@ -22,9 +24,14 @@ app.use(cookieParser());
 // Middleware passport
 app.use(passport.initialize());
 
+// Cors
+app.use(cors({
+  origin: process.env.CORS_ORIGIN,
+  credentials: true
+}));
+
 // Middleware router
 const router = require('./src/routers');
-
 app.use(router);
 
 app.listen(PORT, () => {

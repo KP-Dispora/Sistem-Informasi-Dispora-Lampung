@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('SuratMasuks', {
+    await queryInterface.createTable('SuratKeluars', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -20,7 +20,7 @@ module.exports = {
       tanggal_surat: {
         type: Sequelize.DATE
       },
-      pengirim: {
+      kepada: {
         type: Sequelize.STRING
       },
       perihal: {
@@ -43,6 +43,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('SuratMasuks');
+    await queryInterface.dropTable('SuratKeluars');
   }
 };
