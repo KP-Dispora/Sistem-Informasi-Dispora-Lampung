@@ -10,6 +10,7 @@ import arsipDispora from "../../../../asset/image/arsipSurat/arsipDispora.png";
 import iconnav1 from "../../../../asset/image/arsipSurat/icon/iconnav1.png";
 import iconNavSuratMasuk from "../../../../asset/image/arsipSurat/icon/iconNavSuratMasuk.png";
 import iconNavSuratKeluar from "../../../../asset/image/arsipSurat/icon/iconNavSuratKeluar.png";
+import iconLampung from "../../../../asset/image/arsipSurat/icon/logo_lampung.png";
 
 function NavbarAdminArsipSurat({currentUserLogin ,children}) {
 
@@ -43,21 +44,28 @@ function NavbarAdminArsipSurat({currentUserLogin ,children}) {
       {/*<!-- Sidebar-->*/}
       <div className="border-end bg-white" id="sidebar-wrapper">
           <div className="sidebar-heading border-bottom">
-            <img src={logoLampung} />
+            <img src={logoLampung} alt="Gambar Tidak Ada" />
             <div className="cirle-bacground">
-            <img src={arsipDispora} className="text-center mt-5 ms-1" />
+            <img src={arsipDispora} className="text-center mt-5 ms-1" alt="Gambar Tidak Ada" />
             </div>
           </div>
           <div className="d-flex flex-column">
-              <a className="sidebar-item text-center text-sidebar mb-3 mt-3 p-3 active-sidebar" href="#!">
-                <img src={iconnav1}/> Dashboard
-              </a>
-              <a className="sidebar-item text-center text-sidebar mb-3 mt-3 p-3" href="#!">
-                <img src={iconNavSuratMasuk}/> Surat Masuk
-              </a>
-              <a className="sidebar-item text-center text-sidebar mb-3 mt-3 p-3" href="#!">
-                <img src={iconNavSuratKeluar}/> Surat Keluar
-              </a>
+              <Link to={"/dashboard_admin_arsip_surat"} 
+              className={`sidebar-item text-center text-sidebar mb-3 mt-3 p-3 ${window.location.pathname === "/dashboard_admin_arsip_surat" ? "active-sidebar":""}`}
+              >
+                <img src={iconnav1} alt="Gambar Tidak Ada"/> Dashboard
+              </Link>
+              <Link to={"/admin_surat_masuk"}
+              className={`sidebar-item text-center text-sidebar mb-3 mt-3 p-3 ${window.location.pathname === "/admin_surat_masuk" || window.location.pathname === "/admin_surat_masuk/tambah" 
+              ? "active-sidebar":""}`}
+              >
+                <img src={iconNavSuratMasuk} alt="Gambar Tidak Ada"/> Surat Masuk
+              </Link>
+              <Link to={"/admin_surat_keluar"} 
+              className={`sidebar-item text-center text-sidebar mb-3 mt-3 p-3 ${window.location.pathname === "/admin_surat_keluar" ? "active-sidebar":""}`}
+              >
+                <img src={iconNavSuratKeluar} alt="Gambar Tidak Ada"/> Surat Keluar
+              </Link>
           </div>
       </div>
       {/*<!-- Page content wrapper-->*/}
@@ -65,18 +73,19 @@ function NavbarAdminArsipSurat({currentUserLogin ,children}) {
           {/*<!-- Top navigation-->*/}
           <nav className="navbar navbar-expand-lg navbar-light border-bottom bg-custom-navbar p-3">
               <div className="container-fluid">
-                  <button className="btn btn-primary" id="sidebarToggle" onClick={sidebarToggle}>Toggle Menu</button>
+                  <button className="btn btn-toggle" id="sidebarToggle" onClick={sidebarToggle}>Menu</button>
                   <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span className="navbar-toggler-icon"></span></button>
                   <div className="collapse navbar-collapse" id="navbarSupportedContent">
                       <ul className="navbar-nav ms-auto mt-2 mt-lg-0">
-                          <li className="nav-item"><a className="nav-link active" href="#!">Home</a></li>
+                          {/*<li className="nav-item"><a className="nav-link active" href="#!">Home</a></li>*/}
                           <li className="nav-item dropdown">
-                              <a className="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nama Admin</a>
+                              <button className="btn btn-nama-admin dropdown-toggle" id="navbarDropdown" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img src={iconLampung} alt="Gambar Tidak Ada" /><span className="">{currentUserLogin.nama_admin}</span>
+                              </button>
                               <div className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                  <a className="dropdown-item" href="#!">Action</a>
-                                  <a className="dropdown-item" href="#!">Another action</a>
+                                  <a className="dropdown-item" href="#!">Profile</a>
                                   <div className="dropdown-divider"></div>
-                                  <a className="dropdown-item" href="#!">Something else here</a>
+                                  <button className="dropdown-item" onClick={logOut}>Logout</button>
                               </div>
                           </li>
                       </ul>
@@ -85,15 +94,6 @@ function NavbarAdminArsipSurat({currentUserLogin ,children}) {
           </nav>
           {/*<!-- Page content-->*/}
           <div className="container-fluid">
-              <h1 className="mt-4">Simple Sidebar</h1>
-              <p>The starting state of the menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will change.</p>
-              <p>
-                  Make sure to keep all page content within the
-                  <code>#page-content-wrapper</code>
-                  . The top navbar is optional, and just for demonstration. Just create an element with the
-                  <code>#sidebarToggle</code>
-                  ID which will toggle the menu when clicked.
-              </p>
               <main>{children}</main>
           </div>
       </div>

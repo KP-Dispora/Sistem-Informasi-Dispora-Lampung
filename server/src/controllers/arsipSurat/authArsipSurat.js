@@ -21,7 +21,7 @@ const generateToken = (id, username) => {
   const secret = process.env.SECRET_KEY_TO_MAKE_JWT;
 
   // buat token jwt menggunakan payload & kunci rahasia yang telah ditentukan
-  return jwt.sign(payload, secret, { expiresIn: '1h' });
+  return jwt.sign(payload, secret, { expiresIn: '3h' });
 };
 
 module.exports = {

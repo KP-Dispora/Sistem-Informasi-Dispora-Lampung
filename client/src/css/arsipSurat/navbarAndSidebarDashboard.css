@@ -75,3 +75,32 @@ body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
   border-bottom-right-radius: 10px;
   border-left: 5px solid #4169E1;
 }
+
+.btn-nama-admin {
+  background: #FFFFFF;
+}
+
+.btn-nama-admin:hover {
+  background: #A79536;
+}
+
+.btn-nama-admin:focus {
+  background: #A79536;
+}
+
+.text-btn-admin{
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  color: #000000;
+}
+
+.btn-toggle {
+  background: #A79536;
+}
+
+.btn-toggle:focus {
+  background: #A79536;
+}
