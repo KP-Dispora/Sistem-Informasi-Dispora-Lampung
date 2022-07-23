@@ -191,7 +191,7 @@ function EditSuratKeluarPage() {
         }
         else{
           setPdfError('File Yang Dicantumkan Harus Pdf');
-          setFilePdf('');
+          setFilePdf(e.target.files[0]);
         }
       }
 
@@ -209,7 +209,7 @@ function EditSuratKeluarPage() {
                 <div className="d-flex align-items-center pt-3">
                   <Link className="breadcum-surat-active" to={"/admin_surat_keluar"}> <span>Surat Keluar</span> </Link>
                     <span className="mx-2"><ArrowRight/></span>
-                  <span className="breadcum-surat">Tambah Surat Keluar </span>
+                  <span className="breadcum-surat">Edit Surat Keluar </span>
                 </div>
                 <hr className="py-1"/>
                 <div className="row mb-3">
@@ -277,17 +277,17 @@ function EditSuratKeluarPage() {
                 </div>
 
                 <div className="row mb-3">
-                  <label forhtml="pengirim" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">Pengirim:</label>
+                  <label forhtml="kepada" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">Kepada:</label>
                   <div className="col-sm-10">
                     <input 
                       type="text" 
                       className="form-control" 
-                      name="pengirim"
-                      value={formik.values.pengirim}
+                      name="kepada"
+                      value={formik.values.kepada}
                       onChange={formik.handleChange}
                     />
                     <div className="text-danger">
-                      {formik.errors.pengirim ? formik.errors.pengirim : null}
+                      {formik.errors.kepada ? formik.errors.kepada : null}
                     </div>
                   </div>
                 </div>
@@ -345,7 +345,7 @@ function EditSuratKeluarPage() {
 
                 <div className="text-center">
                   <hr/>
-                  <Link to={"/admin_surat_masuk"} className="btn btn-kembali-surat mb-4">
+                  <Link to={"/admin_surat_keluar"} className="btn btn-kembali-surat mb-4">
                     {"<"} Kembali
                   </Link>
                   <button type="submit" className="btn mb-4 btn-surat mx-4" disabled={loading}>

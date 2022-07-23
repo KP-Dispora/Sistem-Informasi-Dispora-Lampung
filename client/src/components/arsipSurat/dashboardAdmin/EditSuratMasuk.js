@@ -190,8 +190,8 @@ function EditSuratMasukPage() {
           setPdfError('');   
         }
         else{
+          setFilePdf(e.target.files[0]);
           setPdfError('File Yang Dicantumkan Harus Pdf');
-          setFilePdf('');
         }
       }
 

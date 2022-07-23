@@ -102,6 +102,11 @@ function Table({ columns, data }) {
     setFilterInput(value);
   };
 
+  const onChangeBulan = e => {
+    const value = e.target.value || "";
+    setFilter("Tanggal Masuk", value);
+  }
+
   return (
     <>
     <div className="d-flex justify-content-between mt-4">
@@ -126,6 +131,31 @@ function Table({ columns, data }) {
         onChange={handleFilterChange}
         placeholder={"Cari Kode Surat"}
       />
+
+      <select onChange={onChangeBulan} defaultValue="">
+        <option value="">Semua Bulan</option>
+        <option value="Januari">Januari</option>
+        <option value="February">February</option>
+        <option value="Maret">Maret</option>
+        <option value="April">April</option>
+        <option value="Mei">Mei</option>
+        <option value="Juni">Juni</option>
+        <option value="Juli">Juli</option>
+        <option value="Agustus">Agustus</option>
+        <option value="September">September</option>
+        <option value="Oktober">Oktober</option>
+        <option value="November">November</option>
+        <option value="Desember">Desember</option>
+      </select>
+
+      <select>
+        <option value="">Semua Tahun</option>
+      {rows.map((row, i) => (
+        <option key={i} value={row.values['Tanggal Masuk']}>
+          {row.values['Tanggal Masuk']}
+        </option>
+      ))}
+      </select>
     
       <GlobalFilter
         preGlobalFilteredRows={preGlobalFilteredRows}

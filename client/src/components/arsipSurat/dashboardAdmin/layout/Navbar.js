@@ -80,10 +80,10 @@ function NavbarAdminArsipSurat({currentUserLogin ,children}) {
                           {/*<li className="nav-item"><a className="nav-link active" href="#!">Home</a></li>*/}
                           <li className="nav-item dropdown">
                               <button className="btn btn-nama-admin dropdown-toggle" id="navbarDropdown" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img src={iconLampung} alt="Gambar Tidak Ada" /><span className="">{currentUserLogin.nama_admin}</span>
+                                <img src={iconLampung} alt="Gambar Tidak Ada" /><span className="ms-1">{currentUserLogin.nama_admin}</span>
                               </button>
                               <div className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                  <a className="dropdown-item" href="#!">Profile</a>
+                                  <Link className="dropdown-item" to={"/profil_admin_arsip_surat"}>Profile</Link>
                                   <div className="dropdown-divider"></div>
                                   <button className="dropdown-item" onClick={logOut}>Logout</button>
                               </div>

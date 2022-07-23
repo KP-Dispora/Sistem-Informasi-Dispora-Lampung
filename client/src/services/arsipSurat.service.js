@@ -6,6 +6,13 @@ const getDataAdmin = () => {
 	return axios.get(API_URL + "get_data_admin", {withCredentials: true});
 }
 
+const updateProfileAdmin = (id, namaAdmin, username, password, foto) => {
+	return axios.put(API_URL + `update_admin/${id}`,
+		{namaAdmin, username, password, foto},
+		{withCredentials: true}
+	);
+}
+
 // Surat Masuk
 const getDataSuratMasuk = () => {
 	return axios.get(API_URL + "get_data_suratMasuk");
@@ -62,6 +69,7 @@ const editSuratKeluar = (id, tanggalMasuk, kodeSurat, nomorSurat, tanggalSurat, 
 
 export default {
   getDataAdmin,
+  updateProfileAdmin,
   getDataSuratMasuk,
   tambahSuratMasuk,
   getDataSuratById,

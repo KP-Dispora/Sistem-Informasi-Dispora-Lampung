@@ -2,6 +2,52 @@
 	
 }
 
+.text-jumbotron {
+	font-family: 'Montserrat';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 56px;
+	line-height: 64px;
+
+	color: #FFFFFF;
+
+	mix-blend-mode: hard-light;
+}
+
 .footer-home {
 	background: #E2E2E2;
+}
+
+.nav-text {
+	font-family: 'Poppins';
+	font-style: normal;
+	font-weight: 500;
+	font-size: 18px;
+
+	color: #B6B6B6;
+}
+
+.btn-nav {
+	background: #A79536;
+	border-radius: 32px;
+
+	font-family: 'Montserrat';
+	font-style: normal;
+	font-weight: 600;
+	font-size: 20px;
+
+	color: #FFFFFF;
+}
+
+.text-judul-si {
+	background: rgba(0, 0, 0, 0.8);
+	border-radius: 40px;
+
+	font-family: 'Source Serif Pro';
+	font-style: normal;
+	font-weight: 600;
+	font-size: 32px;
+
+	color: #FFFFFF;
+
 }
