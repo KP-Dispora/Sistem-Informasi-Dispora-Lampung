@@ -25,6 +25,13 @@ import DetailSuratMasukPublic from "./components/arsipSurat/DetailSuratMasuk";
 import SuratKeluarPublic from "./components/arsipSurat/SuratKeluarPage";
 import DetailSuratKeluarPublic from "./components/arsipSurat/DetailSuratKeluar";
 
+// ---------------------Compponent Proposal--------------------------------------//
+import HomeProposal from "./components/proposal/Home";
+import LoginAdminProposal from "./components/proposal/dashboardAdmin/LoginAdminProposal";
+import DashboardAdminProposal from "./components/proposal/dashboardAdmin/DashboardAdminProposal";
+import ProfilAdminProposal from "./components/proposal/dashboardAdmin/ProfilAdmin";
+import EditProfilAdminProposal from "./components/proposal/dashboardAdmin/EditProfilAdmin";
+
 //Home
 import Home from "./components/Home";
 
@@ -53,6 +60,14 @@ function App() {
       <Route exact path="/arsip_surat/surat_masuk/detail/:id" element={<DetailSuratMasukPublic />} />
       <Route exact path="/arsip_surat/surat_keluar" element={<SuratKeluarPublic />} />
       <Route exact path="/arsip_surat/surat_keluar/detail/:id" element={<DetailSuratKeluarPublic />} />
+
+      <Route exact path={"/pengajuan_proposal"} element={<HomeProposal />} />
+
+      <Route exact path="/login_admin_proposal" element={<LoginAdminProposal />} />
+      <Route exact path="/dashboard_admin_proposal" element={<DashboardAdminProposal />} />
+      <Route exact path="/profil_admin_proposal" element={<ProfilAdminProposal />} />
+      <Route exact path="/profil_admin_proposal/edit" element={<EditProfilAdminProposal />} />
+
     </Routes>
   );
 }
