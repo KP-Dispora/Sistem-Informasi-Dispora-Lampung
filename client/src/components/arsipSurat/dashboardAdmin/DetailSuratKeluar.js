@@ -60,7 +60,7 @@ function DetailSuratKeluarPage() {
                 <div className="d-flex align-items-center pt-3">
                   <Link className="breadcum-surat-active" to={"/admin_surat_keluar"}> <span>Surat Keluar</span> </Link>
                     <span className="mx-2"><ArrowRight/></span>
-                  <span className="breadcum-surat">Detail Surat Masuk </span>
+                  <span className="breadcum-surat">Detail Surat Keluar </span>
                 </div>
                 <hr className="py-1"/>
                 <div className="row mb-3">
@@ -141,6 +141,45 @@ function DetailSuratKeluarPage() {
                   </div>
                 </div>
 
+                <div className="row mb-3">
+                  <label forhtml="bagian" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">Bagian:</label>
+                  <div className="col-sm-10">
+                    <input 
+                      type="text" 
+                      className="form-control" 
+                      name="bagian"
+                      value={dataSuratMasuk ? dataSuratMasuk.bagian : " "}
+                      disabled
+                    />
+                  </div>
+                </div>
+
+                <div className="row mb-3">
+                  <label forhtml="status" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">Status:</label>
+                  <div className="col-sm-10">
+                    <input 
+                      type="text" 
+                      className="form-control" 
+                      name="status"
+                      value={dataSuratMasuk ? dataSuratMasuk.status : " "}
+                      disabled
+                    />
+                  </div>
+                </div>
+
+                <div className="row mb-3">
+                  <label forhtml="hakAkses" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">Hak Akses:</label>
+                  <div className="col-sm-10">
+                    <input 
+                      type="text" 
+                      className="form-control" 
+                      name="hakAkses"
+                      value={dataSuratMasuk ? dataSuratMasuk.hak_akses : " "}
+                      disabled
+                    />
+                  </div>
+                </div>
+
                 <div className="row">
                   <label forhtml="filePdf" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">File Pdf:</label>
                   <div className="col-sm-10">
@@ -148,7 +187,7 @@ function DetailSuratKeluarPage() {
                       <button className="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#pdfView">
                         Lihat Pdf
                       </button>
-                      <a className="btn btn-outline-secondary" rel="noreferrer" href={dataSuratMasuk && dataSuratMasuk.file_pdf} target="_blank">
+                      <a className="btn btn-outline-secondary" rel="noreferrer" href={dataSuratMasuk && ArsipSuratService.downloadFileSuratKeluar(dataSuratMasuk.file_pdf)} target="_blank">
                         <Download /> Download
                       </a> 
                     </div>
@@ -164,7 +203,7 @@ function DetailSuratKeluarPage() {
               </form>
             </div>
           </div>
-          {dataSuratMasuk ? <PdfViewer pdf={dataSuratMasuk.file_pdf} /> : null}
+          {dataSuratMasuk ? <PdfViewer pdf={ArsipSuratService.downloadFileSuratKeluar(dataSuratMasuk.file_pdf)} /> : null}
         </Navbar>
 
         }

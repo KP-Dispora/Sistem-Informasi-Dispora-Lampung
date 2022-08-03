@@ -55,16 +55,11 @@ function NavbarAdminProposal({currentUserLogin ,children}) {
               >
                 <img src={iconnav1} alt="Gambar Tidak Ada"/> Dashboard
               </Link>
-              <Link to={"/dashboard_admin_proposal"}
-              className={`sidebar-item text-center text-sidebar mb-3 mt-3 p-3 ${window.location.pathname === "/admin_surat_masuk" || window.location.pathname === "/admin_surat_masuk/tambah" 
+              <Link to={"/admin_proposal"}
+              className={`sidebar-item text-center text-sidebar mb-3 mt-3 p-3 ${window.location.pathname === "/admin_proposal" || window.location.pathname === "/admin_proposal/edit" 
               ? "active-sidebar":""}`}
               >
-                <img src={iconNavSuratMasuk} alt="Gambar Tidak Ada"/> Surat Masuk
-              </Link>
-              <Link to={"/dashboard_admin_proposal"} 
-              className={`sidebar-item text-center text-sidebar mb-3 mt-3 p-3 ${window.location.pathname === "/admin_surat_keluar" ? "active-sidebar":""}`}
-              >
-                <img src={iconNavSuratKeluar} alt="Gambar Tidak Ada"/> Surat Keluar
+                <img src={iconNavSuratMasuk} alt="Gambar Tidak Ada"/> Proposal
               </Link>
           </div>
       </div>

@@ -56,8 +56,14 @@ function NavbarAdminArsipSurat({currentUserLogin ,children}) {
                 <img src={iconnav1} alt="Gambar Tidak Ada"/> Dashboard
               </Link>
               <Link to={"/admin_surat_masuk"}
-              className={`sidebar-item text-center text-sidebar mb-3 mt-3 p-3 ${window.location.pathname === "/admin_surat_masuk" || window.location.pathname === "/admin_surat_masuk/tambah" 
-              ? "active-sidebar":""}`}
+              className={`sidebar-item text-center text-sidebar mb-3 mt-3 p-3 
+                ${window.location.pathname === "/admin_surat_masuk" || 
+                  window.location.pathname === "/admin_surat_masuk/tambah" ||
+                  window.location.pathname === "/admin_surat_masuk/detail/:id" 
+                  ? 
+                  "active-sidebar":""
+                }`
+              }
               >
                 <img src={iconNavSuratMasuk} alt="Gambar Tidak Ada"/> Surat Masuk
               </Link>

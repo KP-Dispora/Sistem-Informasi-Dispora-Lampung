@@ -10,12 +10,6 @@ import Swal from 'sweetalert2';
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 
-// Firebase
-import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
-
-// Firebase Config
-import storage from "../../../common/firebaseConfig.js"
-
 // Pdf Viewer
 import PdfViewer from "./PdfView";
 
@@ -40,7 +34,6 @@ function EditSuratMasukPage() {
     const [dataSuratMasuk, setDataSuratMasuk] = useState(undefined);
     const [filePdf, setFilePdf] = useState(undefined);
     const allowedFiles = ['application/pdf'];
-    const [percent, setPercent] = useState(0);
     // pdf file error state
     const [pdfError, setPdfError]=useState('');
 
@@ -72,6 +65,9 @@ function EditSuratMasukPage() {
       tanggalSurat: Yup.string().required("Tanggal Surat Tidak Boleh Kosong"),
       pengirim: Yup.string().required("Pengirim Tidak Boleh Kosong"),
       perihal: Yup.string().required("Perihal Tidak Boleh Kosong"),
+      bagian: Yup.string().required("Bagian Belum Dipilih"),
+      status: Yup.string().required("Status Belum Dipilih"),
+      hakAkses: Yup.string().required("Hak Akses Belum Dipilih"),
     });
 
     const formik = useFormik({
@@ -82,6 +78,9 @@ function EditSuratMasukPage() {
         tanggalSurat: `${ dataSuratMasuk ? formatTanggal(dataSuratMasuk.tanggal_surat) : "" }`,
         pengirim: `${dataSuratMasuk ? dataSuratMasuk.pengirim : ""}`,
         perihal: `${dataSuratMasuk ? dataSuratMasuk.perihal : ""}`,
+        bagian: `${dataSuratMasuk ? dataSuratMasuk.bagian : ""}`,
+        status: `${dataSuratMasuk ? dataSuratMasuk.status : ""}`,
+        hakAkses: `${dataSuratMasuk ? dataSuratMasuk.hak_akses : ""}`,
       },
       enableReinitialize: true,
       validationSchema,
@@ -93,53 +92,46 @@ function EditSuratMasukPage() {
         if(filePdf){
 
           if(filePdf&&allowedFiles.includes(filePdf.type)){
-            const storageRef = ref(storage, `/surat_masuk/${filePdf.name}`+ new Date().getTime())
-            const uploadTask = uploadBytesResumable(storageRef, filePdf);
+            
+            ArsipSuratService.deleteFileSuratMasuk(dataSuratMasuk.file_pdf)
+              .then(()=>{
 
-            const pdfRef = ref(storage, dataSuratMasuk.file_pdf);
-            deleteObject(pdfRef);
+                ArsipSuratService.uploadFileSuratMasuk(filePdf)
+                  .then((response)=>{
 
-            uploadTask.on(
-                "state_changed",
-                (snapshot) => {
-                    const percent = Math.round(
-                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-                    );
-         
-                    // update progress
-                    setPercent(percent);
-                },
-                (err) => console.log(err),
-                () => {
-                    // download url
-                    getDownloadURL(uploadTask.snapshot.ref).then(async (url) => {
-                        await ArsipSuratService.editSuratMasuk(
-                          id,
-                          data.tanggalMasuk,
-                          data.kodeSurat, 
-                          data.nomorSurat, 
-                          data.tanggalSurat, 
-                          data.pengirim, 
-                          data.perihal,
-                          url,
-                          currentUser.nama_admin,
+                    ArsipSuratService.editSuratMasuk(
+                      id,
+                      data.tanggalMasuk,
+                      data.kodeSurat, 
+                      data.nomorSurat, 
+                      data.tanggalSurat, 
+                      data.pengirim, 
+                      data.perihal,
+                      data.bagian,
+                      data.status,
+                      data.hakAkses,
+                      response.data.file,
+                      currentUser.nama_admin,
+                    )
+                      .then(()=>{
+                        setLoading(false);
+                        setPdfError('');
+                        Swal.fire(
+                          {
+                          icon: 'success',
+                          title: 'Surat Masuk Berhasil Diedit',
+                          }
                         )
-                          .then(()=>{
-                            setLoading(false);
-                            setPdfError('');
-                            Swal.fire(
-                              'Surat Masuk Berhasil Diedit',
-                              'success'
-                            )
-                            navigate("/admin_surat_masuk");
-                          })
-                          .catch(()=>{
-                            setLoading(false);
-                            setPdfError('');
-                          })
-                    });
-                }
-            ); 
+                        navigate("/admin_surat_masuk");
+                      })
+                      .catch(()=>{
+                        setLoading(false);
+                        setPdfError('');
+                      })
+
+                  })
+
+              })
           
           }
           else{
@@ -156,6 +148,9 @@ function EditSuratMasukPage() {
             data.tanggalSurat, 
             data.pengirim, 
             data.perihal,
+            data.bagian,
+            data.status,
+            data.hakAkses,
             dataSuratMasuk.file_pdf,
             currentUser.nama_admin,
           )
@@ -163,8 +158,10 @@ function EditSuratMasukPage() {
               setLoading(false);
               setPdfError('');
               Swal.fire(
-                'Surat Masuk Berhasil Diedit',
-                'success'
+                {
+                icon: 'success',
+                title: 'Surat Masuk Berhasil Diedit',
+                }
               )
               navigate("/admin_surat_masuk");
             })
@@ -209,7 +206,7 @@ function EditSuratMasukPage() {
                 <div className="d-flex align-items-center pt-3">
                   <Link className="breadcum-surat-active" to={"/admin_surat_masuk"}> <span>Surat Masuk</span> </Link>
                     <span className="mx-2"><ArrowRight/></span>
-                  <span className="breadcum-surat">Tambah Surat Masuk </span>
+                  <span className="breadcum-surat">Edit Surat Masuk </span>
                 </div>
                 <hr className="py-1"/>
                 <div className="row mb-3">
@@ -309,6 +306,56 @@ function EditSuratMasukPage() {
                 </div>
 
                 <div className="row mb-3">
+                  <label forhtml="bagian" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">Bagian:</label>
+                  <div className="col-sm-10">
+          
+                    <select name="bagian" className="form-select" value={formik.values.bagian} onChange={formik.handleChange} >
+                      <option value="">Pilih Bagian .......</option>
+                      <option value="Bagian1">Bagian1</option>
+                      <option value="Bagian2">Bagian2</option>
+                      <option value="Bagian3">Bagian3</option>
+                      <option value="Bagian4">Bagian4</option>
+                    </select>
+
+                    <div className="text-danger">
+                      {formik.errors.bagian ? formik.errors.bagian : null}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="row mb-3">
+                  <label forhtml="status" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">Status:</label>
+                  <div className="col-sm-10">
+          
+                    <select name="status" className="form-select" value={formik.values.status} onChange={formik.handleChange} >
+                      <option value="">Pilih Status .......</option>
+                      <option value="Belum Diproses">Belum Diproses</option>
+                      <option value="Sudah Diproses">Sudah Diproses</option>
+                    </select>
+
+                    <div className="text-danger">
+                      {formik.errors.status ? formik.errors.status : null}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="row mb-3">
+                  <label forhtml="hakAkses" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">Hak Akses:</label>
+                  <div className="col-sm-10">
+          
+                    <select name="hakAkses" className="form-select" value={formik.values.hakAkses} onChange={formik.handleChange} >
+                      <option value="">Pilih Hak Akses .......</option>
+                      <option value="Public">Public</option>
+                      <option value="Privat">Privat</option>
+                    </select>
+
+                    <div className="text-danger">
+                      {formik.errors.hakAkses ? formik.errors.hakAkses : null}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="row mb-3">
                   <label forhtml="filePdf" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">Upload Pdf Baru:</label>
                   <div className="col-sm-10">
                     <div className="input-group">
@@ -336,7 +383,7 @@ function EditSuratMasukPage() {
                   <label forhtml="filePdf" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">File Pdf:</label>
                   <div className="col-sm-10">
                     <div className="input-group">
-                      <a className="btn btn-outline-secondary" rel="noreferrer" href={dataSuratMasuk && dataSuratMasuk.file_pdf} target="_blank">
+                      <a className="btn btn-outline-secondary" rel="noreferrer" href={dataSuratMasuk && ArsipSuratService.downloadFileSuratMasuk(dataSuratMasuk.file_pdf) } target="_blank">
                         <Download /> Download
                       </a> 
                     </div>
@@ -354,7 +401,6 @@ function EditSuratMasukPage() {
                     )}
                     <span><Download/> Simpan</span>
                   </button>
-                  <p>{percent == 0 ? null: `${percent}% selesai`}</p>
                 </div>
               </form>
             </div>

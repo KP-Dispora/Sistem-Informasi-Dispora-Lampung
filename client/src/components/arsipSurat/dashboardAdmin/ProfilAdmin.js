@@ -10,6 +10,7 @@ import { PencilFill } from 'react-bootstrap-icons';
 // Css
 import '../../../css/arsipSurat/profilAminArsipSurat.css';
 
+
 function ProfilAdmin() {
 
     const navigate = useNavigate();
@@ -47,7 +48,7 @@ function ProfilAdmin() {
             <div className="row">
               <div className="col-2 mt-4">
                 <div className="d-flex flex-column">
-                  <img className="img-fluid mx-auto" src={admin ? admin.foto : ""} alt="Tidak ada Gambar" width="120" height="120" />
+                  <img className="img-fluid mx-auto" src={admin ? ArsipSuratService.downloadFotoAdmin(admin.foto) : ""} alt="Tidak ada Gambar" width="120" height="120" />
                   <Link to={"/profil_admin_arsip_surat/edit"} className="btn btn-edit-profil mb-4 mt-2">
                     <PencilFill /> Edit Profil
                   </Link>

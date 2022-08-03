@@ -7,12 +7,6 @@ import Table from "./TabelDataSurat";
 
 import Swal from 'sweetalert2';
 
-// Firebase
-import { ref, deleteObject } from "firebase/storage";
-
-// Firebase Config
-import storage from "../../../common/firebaseConfig.js"
-
 // Icon
 import { Plus, Trash, EyeFill, PencilSquare } from 'react-bootstrap-icons';
 
@@ -56,12 +50,11 @@ function SuratKeluarPage() {
 
     const deleteSurat = (rowIndex) => {
       const id = dataSuratMasukRef.current[rowIndex].id;
-      const url = dataSuratMasukRef.current[rowIndex].file_pdf;
+      const filePdf = dataSuratMasukRef.current[rowIndex].file_pdf;
       ArsipSuratService.deleteSuratKeluar(id)
           .then((response) => {
             
-            const pdfRef = ref(storage, url);
-            deleteObject(pdfRef);
+            ArsipSuratService.deleteFileSuratKeluar(filePdf);
 
             navigate("/admin_surat_keluar")
             let newDataSurat = [...dataSuratMasukRef.current];
@@ -69,8 +62,8 @@ function SuratKeluarPage() {
             setDataSuratMasuk(newDataSurat);
 
             Swal.fire(
-              'Berhasil Menghapus Surat Keluar',
-              'success'
+              {title: 'Berhasil Menghapus Surat Keluar',
+                icon: 'success'}
             )
           })
     }
@@ -96,12 +89,6 @@ function SuratKeluarPage() {
           filter: 'fuzzyText',
         },
         {
-          Header: 'Tanggal Surat',
-          accessor: d => formatTanggal(d.tanggal_surat),
-          // Use our custom `fuzzyText` filter on this column
-          filter: 'fuzzyText',
-        },
-        {
           Header: 'Kepada',
           accessor: 'kepada',
           // Use our custom `fuzzyText` filter on this column
@@ -110,6 +97,24 @@ function SuratKeluarPage() {
         {
           Header: 'Perihal',
           accessor: 'perihal',
+          // Use our custom `fuzzyText` filter on this column
+          filter: 'fuzzyText',
+        },
+        {
+          Header: 'Bagian',
+          accessor: 'bagian',
+          // Use our custom `fuzzyText` filter on this column
+          filter: 'fuzzyText',
+        },
+        {
+          Header: 'Status',
+          accessor: 'status',
+          // Use our custom `fuzzyText` filter on this column
+          filter: 'fuzzyText',
+        },
+        {
+          Header: 'Hak Akses',
+          accessor: 'hak_akses',
           // Use our custom `fuzzyText` filter on this column
           filter: 'fuzzyText',
         },

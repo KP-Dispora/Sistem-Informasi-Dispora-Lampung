@@ -27,10 +27,17 @@ import DetailSuratKeluarPublic from "./components/arsipSurat/DetailSuratKeluar";
 
 // ---------------------Compponent Proposal--------------------------------------//
 import HomeProposal from "./components/proposal/Home";
+import AjukanProposalPage from "./components/proposal/AjukanProposalPage";
+import CekProposal from "./components/proposal/CekProposal";
+
 import LoginAdminProposal from "./components/proposal/dashboardAdmin/LoginAdminProposal";
 import DashboardAdminProposal from "./components/proposal/dashboardAdmin/DashboardAdminProposal";
 import ProfilAdminProposal from "./components/proposal/dashboardAdmin/ProfilAdmin";
 import EditProfilAdminProposal from "./components/proposal/dashboardAdmin/EditProfilAdmin";
+
+import ProposalPage from "./components/proposal/dashboardAdmin/ProposalPage";
+import DetailProposal from "./components/proposal/dashboardAdmin/DetailProposal";
+import EditProposal from "./components/proposal/dashboardAdmin/EditProposal";
 
 //Home
 import Home from "./components/Home";
@@ -62,11 +69,17 @@ function App() {
       <Route exact path="/arsip_surat/surat_keluar/detail/:id" element={<DetailSuratKeluarPublic />} />
 
       <Route exact path={"/pengajuan_proposal"} element={<HomeProposal />} />
+      <Route exact path={"/pengajuan_proposal/ajukan_proposal"} element={<AjukanProposalPage />} />
+      <Route exact path={"/pengajuan_proposal/cek_proposal"} element={<CekProposal />} />
 
       <Route exact path="/login_admin_proposal" element={<LoginAdminProposal />} />
-      <Route exact path="/dashboard_admin_proposal" element={<DashboardAdminProposal />} />
       <Route exact path="/profil_admin_proposal" element={<ProfilAdminProposal />} />
       <Route exact path="/profil_admin_proposal/edit" element={<EditProfilAdminProposal />} />
+
+      <Route exact path="/dashboard_admin_proposal" element={<DashboardAdminProposal />} />
+      <Route exact path="/admin_proposal" element={<ProposalPage />} />
+      <Route exact path="/admin_proposal/detail/:id" element={<DetailProposal />} />
+      <Route exact path="/admin_proposal/edit/:id" element={<EditProposal />} />
 
     </Routes>
   );

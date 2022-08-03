@@ -1,6 +1,8 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import ProposalService from "../../services/proposal.service";
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link, useParams } from "react-router-dom";
+import AuthService from "../../../services/authAdminProposal.service";
+import ProposalService from "../../../services/proposal.service";
+import Navbar from './layout/Navbar';
 
 import Swal from 'sweetalert2';
 
@@ -9,20 +11,41 @@ import { useFormik } from "formik";
 import * as Yup from 'yup';
 
 // Icon
-import { Download, ArrowRight } from 'react-bootstrap-icons';
+import { ArrowRight, Download } from 'react-bootstrap-icons';
 
 // Css
-import '../../css/arsipSurat/tambahEditSurat.css';
+import '../../../css/arsipSurat/tambahEditSurat.css';
 
-function AjukanProposalPage() {
+function EditProposalPage() {
 
     const navigate = useNavigate();
+    const { id } = useParams();
 
     const [loading, setLoading] = useState(false);
-    const [fileProposal, setFileProposal] = useState(undefined);
-    const allowedFiles = ['application/pdf'];
-    // pdf file error state
-    const [proposalError, setProposalError]=useState('');
+    const [currentUser, setCurrentUser] = useState(undefined);
+    const [dataProposal, setDataProposal] = useState(undefined);
+    const [status, setStatus] = useState();
+
+    useEffect(() => {
+      AuthService.whoami()
+        .then((response) => {
+          setCurrentUser(response);
+        })
+        .catch((error) => {
+          if(error.response.status === 401){
+             setCurrentUser(undefined);
+             navigate("/login_admin_proposal")
+          }
+        });
+
+      ProposalService.getDataProposalById(id)
+          .then( (response) => {
+            setDataProposal(response.data);
+            setStatus(response.data.status);
+          })
+
+        
+    }, [id, navigate]);
 
     //--------------Form Validation-----------------//
     const validationSchema = Yup.object().shape({
@@ -35,122 +58,65 @@ function AjukanProposalPage() {
 
     const formik = useFormik({
       initialValues: {
-        namaLengkap: "",
-        noTelp: "",
-        email: "",
-        asalInstansi: "",
-        perihal: "",
+        namaLengkap: `${ dataProposal ? dataProposal.nama_lengkap : "" }`,
+        noTelp: `${ dataProposal ? dataProposal.no_telp : "" }`,
+        email: `${ dataProposal ? dataProposal.email : ""}`,
+        asalInstansi: `${ dataProposal ? dataProposal.asal_instansi : "" }`,
+        perihal: `${dataProposal ? dataProposal.perihal : ""}`,
       },
+      enableReinitialize: true,
       validationSchema,
       validateOnChange: false,
       validateOnBlur: false,
       onSubmit: async (data) => {
-        setLoading(true);
-
-        if(fileProposal){
-
-          if(fileProposal&&allowedFiles.includes(fileProposal.type)){
-
-            ProposalService.uploadFileProposal(fileProposal)
-              .then((response)=>{
-
-                ProposalService.tambahProposal(
-                  data.namaLengkap,
-                  data.noTelp, 
-                  data.email, 
-                  data.asalInstansi, 
-                  data.perihal,
-                  response.data.file, 
-                  "Belum Diproses",
-                )
-                  .then(()=>{
-                    setLoading(false);
-                    setProposalError('');
-                    Swal.fire(
-                      {title: 'Proposal Telah Diajukan',
-                        icon:'success'}
-                    )
-                    navigate("/pengajuan_proposal");
-                  })
-                  .catch(()=>{
-                    setLoading(false);
-                    setProposalError('');
-                  })
-
-              })
- 
-          
-          }
-          else{
-            setProposalError('File Yang Dicantumkan Harus Pdf');
-            setLoading(false);
-          }
-        }
-        else{
-          setProposalError('File Pdf Belum Dicantumkan ');
-          setLoading(false); 
-        }      
+        setLoading(true);          
+        
+        await ProposalService.editProposal(
+          id,
+          data.namaLengkap,
+          data.noTelp, 
+          data.email, 
+          data.asalInstansi, 
+          data.perihal,
+          dataProposal.file_pdf,
+          status
+        )
+        .then(()=>{
+          setLoading(false);
+          Swal.fire(
+            { icon: 'success',
+              title: 'Proposal Berhasil Diedit',}
+          )
+          navigate("/admin_proposal");
+        })
+        .catch((err)=>{
+          console.log(err)
+          setLoading(false);
+        })
+        setLoading(false);
 
       },
     });
 
-    //-----------------------------------------------------//
-
-    const onChangeFilePdf = (e) => {
-      const selectedFile = e.target.files[0];
-
-      if(selectedFile){
-        if(selectedFile&&allowedFiles.includes(selectedFile.type)){
-          setFileProposal(e.target.files[0]);
-          setProposalError('');   
-        }
-        else{
-          setProposalError('File Yang Dicantumkan Harus Pdf');
-          setFileProposal('');
-        }
-      }
-      else{
-        setFileProposal('');
-        setProposalError('File Pdf Belum Dicantumkan ');
-      }
-
-    };       
+    const onChangeStatus = (e) => {
+      const value = e.target.value;
+      setStatus(value);
+      console.log(value)
+    }     
 
     return (
       <div>
-        <nav className="navbar navbar-expand-md p-2">
-          <div className="container-fluid">
-            <Link className="navbar-brand nav-text" to={"/pengajuan_proposal"}>“ Lampung Maju dan Sejahtera “</Link>
-            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbars" aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation">
-              <span className="navbar-toggler-icon"></span>
-            </button>
+        {currentUser &&
 
-            <div className="collapse navbar-collapse" id="navbars">
-              <ul className="navbar-nav ms-auto mb-2 mb-md-0">
-                <li className="nav-item">
-                  <Link className="nav-link btn btn-nav" to={"/pengajuan_proposal"}>Beranda</Link>
-                </li>
-                <li className="nav-item mx-md-3 my-md-0 my-3">
-                  <Link className="nav-link btn btn-nav" to={"/pengajuan_proposal"}>Layanan</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link btn btn-nav" to={"/pengajuan_proposal"}>Tentang</Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </nav>
-
-        <hr/>
-
-          <h1 className="my-4 text-center text-judul-surat-page">Pengajuan Proposal</h1>
+        <Navbar currentUserLogin={currentUser}>
+          <h1 className="my-4 text-center text-judul-surat-page">Edit Proposal</h1>
           <div className="container bg-form text-font-surat-page">
             <div className="mx-auto">
               <form className="mx-auto px-4" onSubmit={formik.handleSubmit}>
                 <div className="d-flex align-items-center pt-3">
-                  <Link className="breadcum-surat-active" to={"/pengajuan_proposal"}> <span>Home</span> </Link>
+                  <Link className="breadcum-surat-active" to={"/admin_proposal"}> <span>Proposal</span> </Link>
                     <span className="mx-2"><ArrowRight/></span>
-                  <span className="breadcum-surat">Ajukan Proposal </span>
+                  <span className="breadcum-surat">Edit Proposal </span>
                 </div>
                 <hr className="py-1"/>
                 <div className="row mb-3">
@@ -170,7 +136,7 @@ function AjukanProposalPage() {
                 </div>
 
                 <div className="row mb-3">
-                  <label forhtml="noTelp" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">No Telepon:</label>
+                  <label forhtml="noTelp" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">No Telpon:</label>
                   <div className="col-sm-10">
                     <input 
                       type="text" 
@@ -217,6 +183,7 @@ function AjukanProposalPage() {
                   </div>
                 </div>
 
+
                 <div className="row mb-3">
                   <label forhtml="perihal" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">Perihal:</label>
                   <div className="col-sm-10">
@@ -233,25 +200,32 @@ function AjukanProposalPage() {
                   </div>
                 </div>
 
+                <div className="row mb-3">
+                  <label forhtml="status" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">Status:</label>
+                  <div className="col-sm-10">
+                    <div className="input-group">
+                      <select className="form-select" value={status} onChange={onChangeStatus} >
+                        <option value="Belum Diproses">Belum Diproses</option>
+                        <option value="Sudah Diproses">Sudah Diproses</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="row">
                   <label forhtml="filePdf" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">File Pdf:</label>
                   <div className="col-sm-10">
                     <div className="input-group">
-                      <input 
-                        className="form-control" 
-                        type="file" 
-                        name="filePdf"
-                        id="filePdf"
-                        onChange={onChangeFilePdf}
-                      />
+                      <a className="btn btn-outline-secondary" rel="noreferrer" href={dataProposal && ProposalService.downloadFileProposal(dataProposal.file_proposal)} target="_blank">
+                        <Download /> Download
+                      </a> 
                     </div>
-                    {proposalError&&<div className='text-danger'>{proposalError}</div>}
                   </div>
                 </div>
 
                 <div className="text-center">
                   <hr/>
-                  <Link to={"/pengajuan_proposal"} className="btn btn-kembali-surat mb-4">
+                  <Link to={"/admin_proposal"} className="btn btn-kembali-surat mb-4">
                     {"<"} Kembali
                   </Link>
                   <button type="submit" className="btn mb-4 btn-surat mx-4" disabled={loading}>
@@ -261,17 +235,16 @@ function AjukanProposalPage() {
                     <span><Download/> Simpan</span>
                   </button>
                 </div>
+
               </form>
             </div>
           </div>
-      
-      <footer className="pt-4" >
-        <p className="text-center p-3 m-0 footer-home text-muted">&copy; DINAS PEMUDA DAN OLAHRAGA. All rights reserved.</p>
-      </footer>
 
+        </Navbar>
 
+        }
       </div>
     )
 }
 
-export default AjukanProposalPage;
+export default EditProposalPage;

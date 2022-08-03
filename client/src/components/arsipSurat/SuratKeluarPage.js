@@ -25,7 +25,7 @@ function SuratKeluarPagePublic() {
 
     useEffect(() => {
 
-        ArsipSuratService.getDataSuratKeluar()
+        ArsipSuratService.getDataSuratKeluarPublic()
           .then((response) => {
             setDataSuratMasuk(response.data);
           })
@@ -55,12 +55,6 @@ function SuratKeluarPagePublic() {
           filter: 'fuzzyText',
         },
         {
-          Header: 'Tanggal Surat',
-          accessor: d => formatTanggal(d.tanggal_surat),
-          // Use our custom `fuzzyText` filter on this column
-          filter: 'fuzzyText',
-        },
-        {
           Header: 'Kepada',
           accessor: 'kepada',
           // Use our custom `fuzzyText` filter on this column
@@ -69,6 +63,18 @@ function SuratKeluarPagePublic() {
         {
           Header: 'Perihal',
           accessor: 'perihal',
+          // Use our custom `fuzzyText` filter on this column
+          filter: 'fuzzyText',
+        },
+        {
+          Header: 'Bagian',
+          accessor: 'bagian',
+          // Use our custom `fuzzyText` filter on this column
+          filter: 'fuzzyText',
+        },
+        {
+          Header: 'Status',
+          accessor: 'status',
           // Use our custom `fuzzyText` filter on this column
           filter: 'fuzzyText',
         },
@@ -83,7 +89,7 @@ function SuratKeluarPagePublic() {
                 <Link to={`/arsip_surat/surat_keluar/detail/${dataSuratMasukRef.current[rowIdx].id}`} className="btn btn-primary">
                   <EyeFill />
                 </Link>
-                <a className="btn btn-success" href={`${dataSuratMasukRef.current[rowIdx].file_pdf}`} target="_blank" rel="noreferrer">
+                <a className="btn btn-success" href={ArsipSuratService.downloadFileSuratKeluar(dataSuratMasukRef.current[rowIdx].file_pdf)} target="_blank" rel="noreferrer">
                   <Download />
                 </a>
               </div>

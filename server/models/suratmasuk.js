@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static tambah({
-      tanggalMasuk, kodeSurat, nomorSurat, tanggalSurat, pengirim, perihal, filePdf, operator,
+      tanggalMasuk, kodeSurat, nomorSurat, tanggalSurat, pengirim, perihal, bagian, status, hakAkses, filePdf, operator,
     }) {
       return this.create({
         tanggal_masuk: tanggalMasuk,
@@ -23,13 +23,16 @@ module.exports = (sequelize, DataTypes) => {
         tanggal_surat: tanggalSurat,
         pengirim,
         perihal,
+        bagian,
+        status,
+        hak_akses: hakAkses,
         file_pdf: filePdf,
         operator,
       });
     }
 
     static ubah({
-      tanggalMasuk, kodeSurat, nomorSurat, tanggalSurat, pengirim, perihal, filePdf, operator,
+      tanggalMasuk, kodeSurat, nomorSurat, tanggalSurat, pengirim, perihal, bagian, status, hakAkses, filePdf, operator,
     }, id) {
       return this.update({
         tanggal_masuk: tanggalMasuk,
@@ -38,6 +41,9 @@ module.exports = (sequelize, DataTypes) => {
         tanggal_surat: tanggalSurat,
         pengirim,
         perihal,
+        bagian,
+        status,
+        hak_akses: hakAkses,
         file_pdf: filePdf,
         operator
       }, { where: { id } });
@@ -60,6 +66,9 @@ module.exports = (sequelize, DataTypes) => {
     tanggal_surat: DataTypes.DATE,
     pengirim: DataTypes.STRING,
     perihal: DataTypes.TEXT,
+    bagian: DataTypes.STRING,
+    status: DataTypes.STRING,
+    hak_akses: DataTypes.STRING,
     file_pdf: DataTypes.STRING,
     operator: DataTypes.STRING,
   }, {

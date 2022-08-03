@@ -10,12 +10,6 @@ import Swal from 'sweetalert2';
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 
-// Firebase
-import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
-
-// Firebase Config
-import storage from "../../../common/firebaseConfig.js"
-
 // Icon
 import { ArrowRight, ClipboardCheckFill } from 'react-bootstrap-icons';
 
@@ -26,14 +20,12 @@ import '../../../css/arsipSurat/tambahEditSurat.css';
 function EditProfilAdminPage() {
 
     const navigate = useNavigate();
-    const { id } = useParams();
 
     const [loading, setLoading] = useState(false);
     const [currentUser, setCurrentUser] = useState(undefined);
     const [dataAdmin, setDataAdmin] = useState(undefined);
     const [foto, setFoto] = useState(undefined);
     const allowedFiles = ['image/gif', "image/jpeg", "image/png"];
-    const [percent, setPercent] = useState(0);
     // pdf file error state
     const [fotoError, setFotoError]=useState('');
 
@@ -80,50 +72,38 @@ function EditProfilAdminPage() {
         if(foto){
 
           if(foto&&allowedFiles.includes(foto.type)){
-            const storageRef = ref(storage, `/foto_admin_proposal/${foto.name}`+ new Date().getTime())
-            const uploadTask = uploadBytesResumable(storageRef, foto);
+            
+            ProposalService.deleteFotoAdmin(dataAdmin.foto)
+              .then(()=>{
 
-            const fotoRef = ref(storage, dataAdmin.foto);
-            deleteObject(fotoRef);
+                ProposalService.uploadFotoAdmin(foto)
+                  .then((proposal)=>{
 
-            uploadTask.on(
-                "state_changed",
-                (snapshot) => {
-                    const percent = Math.round(
-                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-                    );
-         
-                    // update progress
-                    setPercent(percent);
-                },
-                (err) => console.log(err),
-                () => {
-                    // download url
-                    getDownloadURL(uploadTask.snapshot.ref).then(async (url) => {
-                        await ProposalService.updateProfileAdmin(
-                          id,
-                          data.namaAdmin,
-                          data.username,
-                          data.password,
-                          data.foto,
+                    ProposalService.updateProfileAdmin(
+                      dataAdmin.id,
+                      data.namaAdmin,
+                      data.username,
+                      data.password,
+                      proposal.data.file,
+                    )
+                      .then(()=>{
+                        setLoading(false);
+                        setFotoError('');
+                        Swal.fire(
+                          {title: 'Profil Admin Berhasil Diedit',
+                           icon: 'success'}
                         )
-                          .then(()=>{
-                            setLoading(false);
-                            setFotoError('');
-                            Swal.fire(
-                              'Profil Admin Berhasil Diedit',
-                              'success'
-                            )
-                            navigate("/dashboard_admin_proposal");
-                          })
-                          .catch(()=>{
-                            setLoading(false);
-                            setFotoError('');
-                          })
-                    });
-                }
-            ); 
-          
+                        navigate("/dashboard_admin_proposal");
+                      })
+                      .catch(()=>{
+                        setLoading(false);
+                        setFotoError('');
+                      })
+
+                  })
+
+              })      
+             
           }
           else{
             setFotoError('File Yang Dicantumkan Harus Gambar');
@@ -132,18 +112,18 @@ function EditProfilAdminPage() {
         }
         else{
           await ProposalService.updateProfileAdmin(
-            id,
+            dataAdmin.id,
             data.namaAdmin,
             data.username,
             data.password,
-            data.foto,
+            dataAdmin.foto,
           )
             .then(()=>{
               setLoading(false);
               setFotoError('');
               Swal.fire(
-                'Profil Admin Berhasil Diedit',
-                'success'
+                {title: 'Profil Admin Berhasil Diedit',
+                 icon: 'success'}
               )
               navigate("/dashboard_admin_proposal");
             })
@@ -263,13 +243,13 @@ function EditProfilAdminPage() {
                 <div className="row">
                   <label forhtml="foto" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">Foto Lama:</label>
                   <div className="col-sm-10">
-                    <img className="img-fluid" src={dataAdmin && dataAdmin.foto} alt="Tidak Ada Gambar" /> 
+                    <img className="img-fluid" src={dataAdmin ? ProposalService.downloadFotoAdmin(dataAdmin.foto) : ""} alt="Tidak Ada Gambar" /> 
                   </div>
                 </div>
 
                 <div className="text-center">
                   <hr/>
-                  <Link to={"/admin_surat_masuk"} className="btn btn-kembali-surat mb-4">
+                  <Link to={"/profil_admin_proposal"} className="btn btn-kembali-surat mb-4">
                     {"<"} Kembali
                   </Link>
                   <button type="submit" className="btn mb-4 btn-surat mx-4" disabled={loading}>
@@ -278,7 +258,6 @@ function EditProfilAdminPage() {
                     )}
                     <span><ClipboardCheckFill/> Simpan</span>
                   </button>
-                  <p>{percent == 0 ? null: `${percent}% selesai`}</p>
                 </div>
               </form>
             </div>

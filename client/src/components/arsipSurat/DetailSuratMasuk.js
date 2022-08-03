@@ -127,6 +127,32 @@ function DetailSuratMasukPage() {
                   </div>
                 </div>
 
+                <div className="row mb-3">
+                  <label forhtml="bagian" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">Bagian:</label>
+                  <div className="col-sm-10">
+                    <input 
+                      type="text" 
+                      className="form-control" 
+                      name="bagian"
+                      value={dataSuratMasuk ? dataSuratMasuk.bagian : " "}
+                      disabled
+                    />
+                  </div>
+                </div>
+
+                <div className="row mb-3">
+                  <label forhtml="status" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">Status:</label>
+                  <div className="col-sm-10">
+                    <input 
+                      type="text" 
+                      className="form-control" 
+                      name="status"
+                      value={dataSuratMasuk ? dataSuratMasuk.status : " "}
+                      disabled
+                    />
+                  </div>
+                </div>
+
                 <div className="row">
                   <label forhtml="filePdf" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">File Pdf:</label>
                   <div className="col-sm-10">
@@ -134,7 +160,7 @@ function DetailSuratMasukPage() {
                       <button className="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#pdfView">
                         Lihat Pdf
                       </button>
-                      <a className="btn btn-outline-secondary" rel="noreferrer" href={dataSuratMasuk && dataSuratMasuk.file_pdf} target="_blank">
+                      <a className="btn btn-outline-secondary" rel="noreferrer" href={dataSuratMasuk && ArsipSuratService.downloadFileSuratMasuk(dataSuratMasuk.file_pdf)} target="_blank">
                         <Download /> Download
                       </a> 
                     </div>
@@ -150,7 +176,7 @@ function DetailSuratMasukPage() {
               </form>
             </div>
           </div>
-          {dataSuratMasuk ? <PdfViewer pdf={dataSuratMasuk.file_pdf} /> : null}
+          {dataSuratMasuk ? <PdfViewer pdf={ArsipSuratService.downloadFileSuratMasuk(dataSuratMasuk.file_pdf)} /> : null}
         </Navbar>
 
       </div>

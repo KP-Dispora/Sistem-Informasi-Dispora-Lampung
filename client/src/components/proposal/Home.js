@@ -62,7 +62,7 @@ function Home() {
                   </p>
                 </div>
                 <div className="card-footer">
-                  <Link to={"/pengajuan_proposal"} className="btn btn-primary btn-lg" >Buka</Link>
+                  <Link to={"/pengajuan_proposal/ajukan_proposal"} className="btn btn-primary btn-lg" >Buka</Link>
                 </div>
               </div>
             </div>
@@ -74,7 +74,7 @@ function Home() {
                   <p className="card-text">Cek Proposal Anda</p>
                 </div>
                 <div className="card-footer">
-                  <Link to={"/pengajuan_proposal"} className="btn btn-primary btn-lg" >Buka</Link>
+                  <Link to={"/pengajuan_proposal/cek_proposal"} className="btn btn-primary btn-lg" >Buka</Link>
                 </div>
               </div>
             </div>

@@ -39,7 +39,7 @@ function NavbarArsipSurat({children}) {
                 <img src={iconNavSuratMasuk} alt="Gambar Tidak Ada"/> Surat Masuk
               </Link>
               <Link to={"/arsip_surat/surat_keluar"} 
-              className={`sidebar-item text-center text-sidebar mb-3 mt-3 p-3 ${window.location.pathname === "/surat_keluar" ? "active-sidebar":""}`}
+              className={`sidebar-item text-center text-sidebar mb-3 mt-3 p-3 ${window.location.pathname === "/arsip_surat/surat_keluar" ? "active-sidebar":""}`}
               >
                 <img src={iconNavSuratKeluar} alt="Gambar Tidak Ada"/> Surat Keluar
               </Link>

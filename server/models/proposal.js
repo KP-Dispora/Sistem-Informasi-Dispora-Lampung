@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static tambah({
-      namaLengkap, noTelp, email, asalInstansi, perihal, status,
+      namaLengkap, noTelp, email, asalInstansi, perihal, fileProposal, status,
     }) {
       return this.create({
         nama_lengkap: namaLengkap,
@@ -22,12 +22,13 @@ module.exports = (sequelize, DataTypes) => {
         email,
         asal_instansi: asalInstansi,
         perihal,
+        file_proposal: fileProposal,
         status,
       });
     }
 
     static ubah({
-      namaLengkap, noTelp, email, asalInstansi, perihal, status,
+      namaLengkap, noTelp, email, asalInstansi, perihal, fileProposal, status,
     }, id) {
       return this.update({
         nama_lengkap: namaLengkap,
@@ -35,6 +36,7 @@ module.exports = (sequelize, DataTypes) => {
         email,
         asal_instansi: asalInstansi,
         perihal,
+        file_proposal: fileProposal,
         status,
       }, { where: { id } });
     }
@@ -56,6 +58,7 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     asal_instansi: DataTypes.STRING,
     perihal: DataTypes.STRING,
+    file_proposal: DataTypes.STRING,
     status: DataTypes.STRING
   }, {
     sequelize,

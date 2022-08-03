@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
-import ArsipSuratService from "../../services/arsipSurat.service";
+import { useNavigate, Link, useParams } from "react-router-dom";
+import AuthService from "../../../services/authAdminProposal.service";
+import ProposalSuratService from "../../../services/proposal.service";
 import Navbar from './layout/Navbar';
-
-// Pdf Viewer
-import PdfViewer from "./dashboardAdmin/PdfView";
 
 // Icon
 import { ArrowRight, Download } from 'react-bootstrap-icons';
 
 // Css
-import '../../css/arsipSurat/tambahEditSurat.css';
+import '../../../css/arsipSurat/tambahEditSurat.css';
 
 
 const formatTanggal = (tanggal) => {
@@ -19,96 +17,96 @@ const formatTanggal = (tanggal) => {
    return event.toLocaleDateString('id-ID', options);
 }
 
-function DetailSuratKeluarPage() {
+function DetailSuratMasukPage() {
 
+    const navigate = useNavigate();
     const { id } = useParams();
 
-    const [dataSuratMasuk, setDataSuratMasuk] = useState(undefined);       
+    const [currentUser, setCurrentUser] = useState(undefined);
+    const [dataProposal, setDataProposal] = useState(undefined);       
 
     useEffect(() => {
+      AuthService.whoami()
+        .then((response) => {
+          setCurrentUser(response);
+        })
+        .catch((error) => {
+          if(error.response.status === 401){
+             setCurrentUser(undefined);
+             navigate("/login_admin_proposal")
+          }
+        });
 
-      ArsipSuratService.getDataSuratKeluarById(id)
+      ProposalSuratService.getDataProposalById(id)
           .then((response) => {
-            setDataSuratMasuk(response.data);
+            setDataProposal(response.data);
           })
 
-    }, [id]);
+    }, [id, navigate]);
 
 
     return (
       <div>
+        {currentUser &&
 
-        <Navbar>
-          <h1 className="my-4 text-center text-judul-surat-page">Detail Surat Keluar</h1>
+        <Navbar currentUserLogin={currentUser}>
+          <h1 className="my-4 text-center text-judul-surat-page">Detail Proposal</h1>
           <div className="container bg-form text-font-surat-page">
             <div className="mx-auto">
               <form className="mx-auto px-4">
                 <div className="d-flex align-items-center pt-3">
-                  <Link className="breadcum-surat-active" to={"/arsip_surat/surat_keluar"}> <span>Surat Keluar</span> </Link>
+                  <Link className="breadcum-surat-active" to={"/admin_proposal"}> <span>Proposal</span> </Link>
                     <span className="mx-2"><ArrowRight/></span>
-                  <span className="breadcum-surat">Detail Surat Keluar </span>
+                  <span className="breadcum-surat">Detail Proposal </span>
                 </div>
                 <hr className="py-1"/>
                 <div className="row mb-3">
-                  <label forhtml="tanggalMasuk" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">Tanggal Masuk:</label>
+                  <label forhtml="namaLengkap" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">Nama Lengkap:</label>
                   <div className="col-sm-10">
                     <input 
                       type="text" 
                       className="form-control" 
-                      name="tanggalMasuk"
-                      value={ dataSuratMasuk ? formatTanggal(dataSuratMasuk.tanggal_masuk): " "}
+                      name="namaLengkap"
+                      value={ dataProposal ? dataProposal.nama_lengkap : " "}
                       disabled
                     />
                   </div>
                 </div>
 
                 <div className="row mb-3">
-                  <label forhtml="kodeSurat" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">Kode Surat:</label>
+                  <label forhtml="noTelp" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">No Telepon:</label>
                   <div className="col-sm-10">
                     <input 
                       type="text" 
                       className="form-control" 
-                      name="kodeSurat"
-                      value={ dataSuratMasuk ? dataSuratMasuk.kode_surat : " "}
+                      name="noTelp"
+                      value={ dataProposal ? dataProposal.no_telp : " "}
                       disabled
                     />
                   </div>
                 </div>
 
                 <div className="row mb-3">
-                  <label forhtml="nomorSurat" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">Nomor Surat:</label>
+                  <label forhtml="email" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">Email:</label>
                   <div className="col-sm-10">
                     <input 
                       type="text" 
                       className="form-control" 
-                      name="nomorSurat"
-                      value={dataSuratMasuk ? dataSuratMasuk.nomor_surat : " "}
+                      name="email"
+                      value={dataProposal ? dataProposal.email : " "}
                       disabled
                     />
                   </div>
                 </div>
 
                 <div className="row mb-3">
-                  <label forhtml="tanggalSurat" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">Tanggal Surat:</label>
+                  <label forhtml="asalInstansi" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">Asal Instansi:</label>
                   <div className="col-sm-10">
                     <input 
                       type="text" 
                       className="form-control" 
-                      name="tanggalSurat"
-                      value={dataSuratMasuk ? formatTanggal(dataSuratMasuk.tanggal_surat) : " "}
-                      disabled
-                    />
-                  </div>
-                </div>
-
-                <div className="row mb-3">
-                  <label forhtml="kepada" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">kepada:</label>
-                  <div className="col-sm-10">
-                    <input 
-                      type="text" 
-                      className="form-control" 
-                      name="kepada"
-                      value={dataSuratMasuk ? dataSuratMasuk.kepada : " "}
+                      name="asalInstansi"
+                      value={dataProposal ? dataProposal.asal_instansi : " "}
                       disabled
                     />
                   </div>
@@ -121,20 +119,20 @@ function DetailSuratKeluarPage() {
                       type="text" 
                       className="form-control" 
                       name="perihal"
-                      value={dataSuratMasuk ? dataSuratMasuk.perihal : " "}
+                      value={dataProposal ? dataProposal.perihal : " "}
                       disabled
                     />
                   </div>
                 </div>
 
                 <div className="row mb-3">
-                  <label forhtml="bagian" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">Bagian:</label>
+                  <label forhtml="createdAt" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">Tanggal Pengajuan:</label>
                   <div className="col-sm-10">
                     <input 
                       type="text" 
                       className="form-control" 
-                      name="bagian"
-                      value={dataSuratMasuk ? dataSuratMasuk.bagian : " "}
+                      name="createdAt"
+                      value={dataProposal ? formatTanggal(dataProposal.createdAt) : " "}
                       disabled
                     />
                   </div>
@@ -147,7 +145,7 @@ function DetailSuratKeluarPage() {
                       type="text" 
                       className="form-control" 
                       name="status"
-                      value={dataSuratMasuk ? dataSuratMasuk.status : " "}
+                      value={dataProposal ? dataProposal.status : " "}
                       disabled
                     />
                   </div>
@@ -157,10 +155,7 @@ function DetailSuratKeluarPage() {
                   <label forhtml="filePdf" className="col-sm-2 col-form-label text-sm-end text-form-surat-page">File Pdf:</label>
                   <div className="col-sm-10">
                     <div className="input-group">
-                      <button className="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#pdfView">
-                        Lihat Pdf
-                      </button>
-                      <a className="btn btn-outline-secondary" rel="noreferrer" href={dataSuratMasuk && ArsipSuratService.downloadFileSuratKeluar(dataSuratMasuk.file_pdf)} target="_blank">
+                      <a className="btn btn-outline-secondary" rel="noreferrer" href={dataProposal && ProposalSuratService.downloadFileProposal(dataProposal.file_proposal) } target="_blank">
                         <Download /> Download
                       </a> 
                     </div>
@@ -169,18 +164,19 @@ function DetailSuratKeluarPage() {
 
                 <div className="text-center">
                   <hr/>
-                  <Link to={"/arsip_surat/surat_keluar"} className="btn btn-kembali-surat mb-4">
+                  <Link to={"/admin_proposal"} className="btn btn-kembali-surat mb-4">
                     {"<"} Kembali
                   </Link>
                 </div>
               </form>
             </div>
           </div>
-          {dataSuratMasuk ? <PdfViewer pdf={ArsipSuratService.downloadFileSuratKeluar(dataSuratMasuk.file_pdf)} /> : null}
+
         </Navbar>
 
+        }
       </div>
     )
 }
 
-export default DetailSuratKeluarPage;
+export default DetailSuratMasukPage;

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import AuthService from "../../../services/authAdminArsipSurat.service";
-import ArsipSuratService from "../../../services/arsipSurat.service";
+import AuthService from "../../../services/authAdminProposal.service";
+import ProposalService from "../../../services/proposal.service";
 import Navbar from './layout/Navbar';
-import Table from "./TabelDataSurat";
+import Table from "./TabelProposal";
 
 import Swal from 'sweetalert2';
 
@@ -19,14 +19,14 @@ const formatTanggal = (tanggal) => {
    return event.toLocaleDateString('id-ID', options);
 }
 
-function SuratMasukPage() {
+function ProposalPage() {
 
     const navigate = useNavigate();
     const [currentUser, setCurrentUser] = useState(undefined);
-    const [dataSuratMasuk, setDataSuratMasuk] = useState([]);
+    const [dataProposal, setDataProposal] = useState([]);
 
-    const dataSuratMasukRef = useRef();
-    dataSuratMasukRef.current = dataSuratMasuk;
+    const dataProposalRef = useRef();
+    dataProposalRef.current = dataProposal;
 
     useEffect(() => {
       AuthService.whoami()
@@ -36,33 +36,33 @@ function SuratMasukPage() {
         .catch((error) => {
           if(error.response.status === 401){
              setCurrentUser(undefined);
-             navigate("/login_admin_arsip_surat")
+             navigate("/login_admin_proposal")
           }
         });
 
-        ArsipSuratService.getDataSuratMasuk()
+        ProposalService.getDataProposal()
           .then((response) => {
-            setDataSuratMasuk(response.data);
+            setDataProposal(response.data);
           })
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const deleteSurat = (rowIndex) => {
-      const id = dataSuratMasukRef.current[rowIndex].id;
-      const filePdf = dataSuratMasukRef.current[rowIndex].file_pdf;
-      ArsipSuratService.deleteSuratMasuk(id)
+      const id = dataProposalRef.current[rowIndex].id;
+      const filePdf = dataProposalRef.current[rowIndex].file_proposal;
+      ProposalService.deleteProposal(id)
           .then((response) => {
             
-            ArsipSuratService.deleteFileSuratMasuk(filePdf);
+            ProposalService.deleteFileProposal(filePdf);
 
-            navigate("/admin_surat_masuk")
-            let newDataSurat = [...dataSuratMasukRef.current];
-            newDataSurat.splice(rowIndex, 1);
-            setDataSuratMasuk(newDataSurat);
+            navigate("/admin_proposal")
+            let newDataProposal = [...dataProposalRef.current];
+            newDataProposal.splice(rowIndex, 1);
+            setDataProposal(newDataProposal);
 
             Swal.fire(
-              {title: 'Berhasil Menghapus Surat Masuk',
+              {title: 'Berhasil Menghapus Proposal',
                 icon: 'success'}
             )
           })
@@ -71,26 +71,20 @@ function SuratMasukPage() {
     const columns = useMemo(
       () => [
         {
-          Header: 'Tanggal Masuk',
-          accessor: d => formatTanggal(d.tanggal_masuk),
+          Header: 'Nama Lengkap',
+          accessor: 'nama_lengkap',
           // Use our custom `fuzzyText` filter on this column
           filter: 'fuzzyText',
         },
         {
-          Header: 'Kode Surat',
-          accessor: 'kode_surat',
+          Header: 'No Telpon',
+          accessor: 'no_telp',
           // Use our custom `fuzzyText` filter on this column
           filter: 'fuzzyText',
         },
         {
-          Header: 'Nomor Surat',
-          accessor: 'nomor_surat',
-          // Use our custom `fuzzyText` filter on this column
-          filter: 'fuzzyText',
-        },
-        {
-          Header: 'Pengirim',
-          accessor: 'pengirim',
+          Header: 'Email',
+          accessor: 'email',
           // Use our custom `fuzzyText` filter on this column
           filter: 'fuzzyText',
         },
@@ -101,20 +95,20 @@ function SuratMasukPage() {
           filter: 'fuzzyText',
         },
         {
-          Header: 'Bagian',
-          accessor: 'bagian',
+          Header: 'Tanggal Pengajuan',
+          accessor: d => formatTanggal(d.createdAt),
+          // Use our custom `fuzzyText` filter on this column
+          filter: 'fuzzyText',
+        },
+        {
+          Header: 'Asal Instansi',
+          accessor: 'asal_instansi',
           // Use our custom `fuzzyText` filter on this column
           filter: 'fuzzyText',
         },
         {
           Header: 'Status',
           accessor: 'status',
-          // Use our custom `fuzzyText` filter on this column
-          filter: 'fuzzyText',
-        },
-        {
-          Header: 'Hak Akses',
-          accessor: 'hak_akses',
           // Use our custom `fuzzyText` filter on this column
           filter: 'fuzzyText',
         },
@@ -126,10 +120,10 @@ function SuratMasukPage() {
             const rowIdx = props.row.id;
             return (
               <div>
-                <Link to={`/admin_surat_masuk/detail/${dataSuratMasukRef.current[rowIdx].id}`} className="btn btn-primary">
+                <Link to={`/admin_proposal/detail/${dataProposalRef.current[rowIdx].id}`} className="btn btn-primary">
                   <EyeFill />
                 </Link>
-                <Link to={`/admin_surat_masuk/edit/${dataSuratMasukRef.current[rowIdx].id}`} className="btn btn-warning">
+                <Link to={`/admin_proposal/edit/${dataProposalRef.current[rowIdx].id}`} className="btn btn-warning">
                   <PencilSquare />
                 </Link>
                 <button className="btn btn-danger" onClick={() => deleteSurat(rowIdx)}>
@@ -149,8 +143,7 @@ function SuratMasukPage() {
         {currentUser &&
 
         <Navbar currentUserLogin={currentUser}>
-          <Link to={"/admin_surat_masuk/tambah"} className="btn btn-tambah-surat mt-4"> <Plus />  Tambah Surat Masuk</Link>
-          <Table columns={columns} dataSurat={dataSuratMasuk}>
+          <Table columns={columns} dataSurat={dataProposal}>
           </Table>
         </Navbar>
 
@@ -159,4 +152,4 @@ function SuratMasukPage() {
     )
 }
 
-export default SuratMasukPage;
+export default ProposalPage;

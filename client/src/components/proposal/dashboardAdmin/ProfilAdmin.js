@@ -47,7 +47,7 @@ function ProfilAdminProposal() {
             <div className="row">
               <div className="col-2 mt-4">
                 <div className="d-flex flex-column">
-                  <img className="img-fluid mx-auto" src={admin ? admin.foto : ""} alt="Tidak ada Gambar" width="120" height="120" />
+                  <img className="img-fluid mx-auto" src={admin ? ProposalService.downloadFotoAdmin(admin.foto) : ""} alt="Tidak ada Gambar" width="120" height="120" />
                   <Link to={"/profil_admin_proposal/edit"} className="btn btn-edit-profil mb-4 mt-2">
                     <PencilFill /> Edit Profil
                   </Link>

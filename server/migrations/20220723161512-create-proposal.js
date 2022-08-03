@@ -23,6 +23,9 @@ module.exports = {
       perihal: {
         type: Sequelize.STRING
       },
+      file_proposal: {
+        type: Sequelize.STRING
+      },
       status: {
         type: Sequelize.STRING
       },

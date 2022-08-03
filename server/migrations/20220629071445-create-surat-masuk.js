@@ -26,6 +26,15 @@ module.exports = {
       perihal: {
         type: Sequelize.TEXT
       },
+      bagian: {
+        type: Sequelize.STRING
+      },
+      status: {
+        type: Sequelize.STRING
+      },
+      hak_akses: {
+        type: Sequelize.STRING
+      },
       file_pdf: {
         type: Sequelize.STRING
       },

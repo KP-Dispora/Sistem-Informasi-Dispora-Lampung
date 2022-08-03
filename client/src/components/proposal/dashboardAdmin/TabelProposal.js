@@ -98,36 +98,12 @@ function Table({ columns, data }) {
   )
 
   // Filter Sesuai Kolom
-  // const [filterInput, setFilterInput] = React.useState("");
-  const [filterBulan, setFilterBulan] = React.useState("");
-  const [filterTahun, setFilterTahun] = React.useState("");
-  
-  const listTahun = [...new Set(data.map(surat => {
-                                  const d = new Date(surat.tanggal_masuk);
-                                  return d.getFullYear()
-                                }
-                                )
-                            )
-                    ].sort();
-
-  
-  // const handleFilterChange = e => {
-  //   const value = e.target.value || "";
-  //   setFilter("kode_surat", value);
-  //   setFilterInput(value);
-  // };
-
-  const onChangeBulan = e => {
+  const [filterInput, setFilterInput] = React.useState("");
+  const handleFilterChange = e => {
     const value = e.target.value || "";
-    setFilterBulan(value);
-    setFilter("Tanggal Masuk", `${value} ${filterTahun}`);
-  }
-
-  const onChangeTahun = e => {
-    const value = e.target.value || "";
-    setFilterTahun(value)
-    setFilter("Tanggal Masuk", `${filterBulan} ${value}`);
-  }
+    setFilter("status", value);
+    setFilterInput(value);
+  };
 
   return (
     <>
@@ -153,55 +129,18 @@ function Table({ columns, data }) {
         </div>
       </div>
 
-      {/*<input
-        value={filterInput}
-        onChange={handleFilterChange}
-        placeholder={"Cari Kode Surat"}
-      />*/}
-
-      <div className="col-auto">
-
-        <div className="row">
-          <div className="col-auto" >
-            <select className="form-select" onChange={onChangeBulan} defaultValue="">
-              <option value="">Semua Bulan</option>
-              <option value="Januari">Januari</option>
-              <option value="February">February</option>
-              <option value="Maret">Maret</option>
-              <option value="April">April</option>
-              <option value="Mei">Mei</option>
-              <option value="Juni">Juni</option>
-              <option value="Juli">Juli</option>
-              <option value="Agustus">Agustus</option>
-              <option value="September">September</option>
-              <option value="Oktober">Oktober</option>
-              <option value="November">November</option>
-              <option value="Desember">Desember</option>
-            </select>
-          </div>
-
-          <div className="col-auto" >
-            <select className="form-select" onChange={onChangeTahun} defaultValue="">
-              <option value="">Semua Tahun</option>
-
-            {
-              listTahun.map((row) => {    
-                          return (
-                          <option key={row} value={row}>
-                            {row}
-                          </option>
-                          )
-                      }
-              )
-            }
-            </select>
-          </div>
-        </div>
-
-      </div>
-
-          
       
+
+        
+      <div className="col-auto" >
+        <select className="form-select" onChange={handleFilterChange} defaultValue="">
+          <option value="">Pilih Status</option>
+          <option value="Belum Diproses">Belum Diproses</option>
+          <option value="Sudah Diproses">Sudah Diproses</option>
+        </select>
+      </div>
+        
+          
       
         <GlobalFilter
           preGlobalFilteredRows={preGlobalFilteredRows}
@@ -209,7 +148,6 @@ function Table({ columns, data }) {
           setGlobalFilter={setGlobalFilter}
         />
     </div>
-
             
     <div className="table-responsive">
       <table className="table table-striped table-hover border-dark table-bordered mt-4" {...getTableProps()}>
@@ -283,8 +221,6 @@ function Table({ columns, data }) {
       </span>
 
     </div>
-
-  
 
     </>
   )

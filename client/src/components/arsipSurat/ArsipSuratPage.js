@@ -16,12 +16,12 @@ const DashboardAdminArsipSurat = () => {
 
   useEffect(() => {
 
-    ArsipSuratService.getDataSuratMasuk()
+    ArsipSuratService.getDataSuratMasukPublic()
       .then((response) => {
         setDataSuratMasuk(response.data);
       })
 
-    ArsipSuratService.getDataSuratKeluar()
+    ArsipSuratService.getDataSuratKeluarPublic()
       .then((response) => {
         setDataSuratKeluar(response.data);
       })
@@ -32,7 +32,7 @@ const DashboardAdminArsipSurat = () => {
   return (
     <div>
       <Navbar>
-        <h1 className="mt-5 text-center">Dashboard Admin</h1>
+        <h1 className="mt-5 text-center">Arsip Surat</h1>
         <div className="row row-cols-1 row-cols-md-2 g-4 mt-4">
             <div className="col align-self-center">
               <div className="card w-75 mx-auto card-custom-style">
