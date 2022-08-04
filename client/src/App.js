@@ -2,8 +2,8 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
-import './App.css';
-// ---------------------Compponent Arsip Surat--------------------------------------// 
+import "./App.css";
+// ---------------------Compponent Arsip Surat--------------------------------------//
 import LoginAdminArsipSurat from "./components/arsipSurat/dashboardAdmin/LoginAdminArsipSurat";
 import DashboardAdminArsipSurat from "./components/arsipSurat/dashboardAdmin/DashboardAdminArsipSurat";
 import ProfilAdminArsipSurat from "./components/arsipSurat/dashboardAdmin/ProfilAdmin";
@@ -29,6 +29,7 @@ import DetailSuratKeluarPublic from "./components/arsipSurat/DetailSuratKeluar";
 import HomeProposal from "./components/proposal/Home";
 import AjukanProposalPage from "./components/proposal/AjukanProposalPage";
 import CekProposal from "./components/proposal/CekProposal";
+import TentangProposal from "./components/proposal/TentangProposal";
 
 import LoginAdminProposal from "./components/proposal/dashboardAdmin/LoginAdminProposal";
 import DashboardAdminProposal from "./components/proposal/dashboardAdmin/DashboardAdminProposal";
@@ -41,12 +42,14 @@ import EditProposal from "./components/proposal/dashboardAdmin/EditProposal";
 
 //Home
 import Home from "./components/Home";
+import Tentang from "./components/Tentang";
 
 function App() {
   return (
     <Routes>
       <Route exact path={"/"} element={<Home />} />
       <Route exact path={"/home"} element={<Home />} />
+      <Route exact path={"/tentang"} element={<Tentang />} />
 
       <Route exact path="/login_admin_arsip_surat" element={<LoginAdminArsipSurat />} />
       <Route exact path="/dashboard_admin_arsip_surat" element={<DashboardAdminArsipSurat />} />
@@ -61,7 +64,7 @@ function App() {
       <Route exact path="/admin_surat_keluar/tambah" element={<TambahSuratKeluarPage />} />
       <Route exact path="/admin_surat_keluar/detail/:id" element={<DetailSuratKeluar />} />
       <Route exact path="/admin_surat_keluar/edit/:id" element={<EditSuratKeluar />} />
-      
+
       <Route exact path="/arsip_surat" element={<ArsipSuratPage />} />
       <Route exact path="/arsip_surat/surat_masuk" element={<SuratMasukPublic />} />
       <Route exact path="/arsip_surat/surat_masuk/detail/:id" element={<DetailSuratMasukPublic />} />
@@ -69,6 +72,7 @@ function App() {
       <Route exact path="/arsip_surat/surat_keluar/detail/:id" element={<DetailSuratKeluarPublic />} />
 
       <Route exact path={"/pengajuan_proposal"} element={<HomeProposal />} />
+      <Route exact path={"/tentang_proposal"} element={<TentangProposal />} />
       <Route exact path={"/pengajuan_proposal/ajukan_proposal"} element={<AjukanProposalPage />} />
       <Route exact path={"/pengajuan_proposal/cek_proposal"} element={<CekProposal />} />
 
@@ -80,6 +84,8 @@ function App() {
       <Route exact path="/admin_proposal" element={<ProposalPage />} />
       <Route exact path="/admin_proposal/detail/:id" element={<DetailProposal />} />
       <Route exact path="/admin_proposal/edit/:id" element={<EditProposal />} />
+
+      
 
     </Routes>
   );
